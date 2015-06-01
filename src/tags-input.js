@@ -1,4 +1,4 @@
-'use strict';
+/'use strict';
 
 /**
  * @ngdoc directive
@@ -38,6 +38,7 @@
  * @param {boolean=} [addFromAutocompleteOnly=false] Flag indicating that only tags coming from the autocomplete list
  *    will be allowed. When this flag is true, addOnEnter, addOnComma, addOnSpace and addOnBlur values are ignored.
  * @param {boolean=} [spellcheck=true] Flag indicating whether the browser's spellcheck is enabled for the input field or not.
+ * @param {expression} [customTagClasses=NA] Expression to provide the tag with custom classes for styling. The tag is available as $tag. This method must return an array of classes.
  * @param {expression=} [onTagAdding=NA] Expression to evaluate that will be invoked before adding a new tag. The new
  *    tag is available as $tag. This method must return either true or false. If false, the tag will not be added.
  * @param {expression=} [onTagAdded=NA] Expression to evaluate upon adding a new tag. The new tag is available as $tag.
@@ -153,7 +154,11 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
         require: 'ngModel',
         scope: {
             tags: '=ngModel',
+<<<<<<< HEAD
             text: '=?',
+=======
+            customTagClasses: '&',
+>>>>>>> 8dc86513e8ad923e11d79326bee6de7fb5af997e
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -267,6 +272,18 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     }
                 },
                 invalid: null
+            };
+
+            scope.getTagClasses = function(tag) {
+              var classes = [];
+              if(tag === tagList.selected){
+                classes.push('selected');
+              }
+              var customClasses = scope.customTagClasses({ $tag: tag });
+              if(customClasses){
+                classes = classes.concat(customClasses);
+              }
+              return classes;
             };
 
             scope.track = function(tag) {
